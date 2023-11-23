@@ -1,0 +1,99 @@
+#!/bin/bash
+
+cleanup() {
+    echo "Exiting the main script"
+
+    # Matar los procesos si existen
+    if [ -f procesoReducido.pid ]; then
+        procesoReducido_pid=$(<procesoReducido.pid)
+        echo "Terminando procesoReducido (PID: $procesoReducido_pid)..."
+        #su -u kali -c "kill $procesoReducido_pid"
+		sudo killall procesoReducido
+        rm procesoReducido.pid
+    fi
+
+    if [ -f monitorSystem.pid ]; then
+        monitorSystem_pid=$(<monitorSystem.pid)
+        echo "Terminando monitorSystem (PID: $monitorSystem_pid)..."
+        sudo kill $monitorSystem_pid
+        rm monitorSystem.pid
+    fi
+
+    if [ -f analizeLogs.pid ]; then
+        analizeLogs_pid=$(<analizeLogs.pid)
+        echo "Terminando analizeLogs (PID: $analizeLogs_pid)..."
+        kill $analizeLogs_pid
+        rm analizeLogs.pid
+    fi
+
+    if [ -f expulsionSystem.pid ]; then
+        expulsionSystem_pid=$(<expulsionSystem.pid)
+        echo "Terminando expulsionSystem (PID: $expulsionSystem_pid)..."
+        sudo kill $expulsionSystem_pid
+        rm expulsionSystem.pid
+    fi
+
+    if [ -f snifferProceso.pid ]; then
+        snifferProceso_pid=$(<snifferProceso.pid)
+        echo "Terminando snifferProceso (PID: $snifferProceso_pid)..."
+        sudo kill $snifferProceso_pid
+		sudo killall snifferProceso
+        rm snifferProceso.pid
+    fi
+	
+	if [ -f appWeb.pid ]; then
+        appWeb_pid=$(<appWeb.pid)
+        echo "Terminando AppWeb (PID: $appWeb_pid)..."
+        sudo kill $appWeb_pid
+		sudo killall dotnet
+        rm appWeb.pid
+    fi
+	
+	
+	
+	#sudo airmon-ng stop wlan0mon
+	#service NetworkManager start
+	#service wpa_supplicant start
+
+    echo "Procesos terminados y archivos de PID eliminados."
+    exit 0
+}
+
+# Configurar el trap para manejar Ctrl+C y la limpieza
+trap cleanup INT
+trap cleanup EXIT
+
+echo " >>=======================================<<"
+echo " >>   Bienvenido al sistema Espresso!     <<"
+echo " >> Estamos iniciando todo para usted...  <<"
+echo " >>=======================================<<"
+
+cd /home/kali/Espresso
+source ./bin/activate
+echo "Entorno establecido."
+
+
+su kali -c "./procesoReducido & echo $! > procesoReducido.pid"
+echo "Sistema de detección de anomalias iniciado."
+
+sudo python monitorSystem.py & echo $! > monitorSystem.pid
+echo "Sistema de monitoreo iniciado."
+
+python analizeLogs.py & echo $! > analizeLogs.pid
+echo "Sistema de analisis de comportamiento iniciado."
+
+sudo ./airmon
+echo "wlan0 configurada en modo monitor."
+
+sudo python expulsionSystem.py & echo $! > expulsionSystem.pid
+echo "Sistema de expulsion iniciado."
+
+su kali -c  "./snifferProceso & echo $! > snifferProceso.pid"
+echo "Sistema de detección de anomalias (Monitor Mode) iniciado."
+
+su kali -c "/home/kali/.dotnet/dotnet run --project /home/kali/proyecto-final-webconfig/proyecto-final-webconfig & echo $! > appWeb.pid"
+echo "Sistema de aplicación web iniciado."
+
+
+read -p "Presiona Enter para salir y finalizar los procesos secundarios"
+

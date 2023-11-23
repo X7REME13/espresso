@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cd /home/kali/Espresso
+source ./bin/activate
+
+command="tshark -i wlan0mon -a duration:10 -w"
+filename="/home/kali/Espresso/captures/captureSniffer.pcap"
+basefilepath="/home/kali/Espresso/captures/filteredReducidoMonitor"
+
+while true
+do
+	echo "================================================================================="
+	$($command $filename)
+	echo "----------------------------------------------------------------------------"
+	
+	echo "> Undecover attack"
+	tshark -r $filename -Y "!(wlan.sa == 00:cb:51:5f:34:e6) and !(wlan.sa == d8:3a:dd:0b:20:6c) and wlan.bssid == 00:cb:51:5f:34:e7 and (wlan.fc.type_subtype == 0x0028 or wlan.fc.type_subtype == 0x000c or wlan.fc.type_subtype == 0x0020)" -w "${basefilepath}/filterD.pcap"
+	
+	python processCapsMonitorMode.py
+done

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+cd /home/kali/Espresso
+source ./bin/activate
+
+tshark="tshark -i eth0 -a duration:20 -w"
+
+filename="/home/kali/Espresso/captures/capture.pcap"
+basefilepath="/home/kali/Espresso/captures/filteredReducido"
+filter="not ether host D8:3A:DD:0B:20:6E and not ether host D8:3A:DD:0B:20:6C"
+
+while true
+do
+
+  $tshark $filename $filter
+  
+  # {
+  #echo "----------------------------------------------------------------------------"
+  
+# echo "> Host discovery"
+ 
+  $(tshark -r "$filename" -Y "(arp.dst.hw_mac==00:00:00:00:00:00) or (icmp.type==3 and icmp.code==2) or (icmp.type==8 or icmp.type==0) or (tcp.dstport==7) or (udp.dstport==7)" -w "${basefilepath}/0_hostDiscovery.pcap")
+
+#echo "> Port Scanning"
+
+$(tshark -r "$filename" -Y "(tcp.flags.syn==1 and tcp.flags.ack==0 and tcp.window_size <= 1024) or (tcp.flags.syn==1 and tcp.flags.ack==0 and tcp.window_size > 1024) or (tcp.flags==0) or (tcp.flags==0x001) or (tcp.flags.fin==1 && tcp.flags.push==1 && tcp.flags.urg==1) or (icmp.type==3 and icmp.code==3)" -w "${basefilepath}/1_portScanning.pcap")
+
+#echo "> Network attacks"
+
+$(tshark -r "$filename" -Y "(arp.duplicate-address-detected or arp.duplicate-address-frame) or (icmp and data.len > 48) or (dtp or vlan.too_many_tags)" -w "${basefilepath}/2_networkAttack.pcap")
+
+#echo "> Packet loss"
+
+$(tshark -r "$filename" -Y "(tcp.analysis.lost_segment or tcp.analysis.retransmission)" -w "${basefilepath}/3_packetLoss.pcap")
+
+#echo "> Wireless network attacks"
+
+$(tshark -r "$filename" -Y "(wlan.fc.type_subtype == 12) or (wlan.fc.type_subtype == 10) or (wlan.fc.type_subtype == 8) or (wlan.fc.type_subtype == 11)" -w "${basefilepath}/4_wirelessNetworkAttack.pcap")
+  
+   # } &
+ #  echo "----------------------------------------------------------------------------"
+  # echo "Python Script process Starting..."
+   
+   python processCaps.py
+  done
