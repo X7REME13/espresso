@@ -1,0 +1,165 @@
+﻿@model IEnumerable<proyecto_final_webconfig.Models.Entities.Event>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Registro de eventos</h1>
+<hr />
+<table id="miTabla" class="table  table-striped table-hover">
+    <thead class="table-primary">
+        <tr>
+            @*  <th>
+                 @Html.DisplayNameFor(model => model.IpSource)
+             </th>
+             <th>
+                 @Html.DisplayNameFor(model => model.MacSource)
+             </th> *@
+            <th>
+                Dispositivo origen
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.IpDestination)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MacDestination)
+            </th> 
+             <th>
+                 Dispositivo destino
+            </th>*@
+            <th>
+                Tipo de ataque
+            </th>
+            <th>
+                Tamaño de ataque
+            </th>
+            <th>
+                Severidad de ataque
+            </th>
+            <th>
+                Hora de detección
+            </th>
+            <th class="no-sort"></thclas>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            @if (String.IsNullOrEmpty(item.OuiSource))
+            {
+                <td>Anónimo</td>
+            }
+            else
+            {
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.OuiSource)
+                </td>
+            }
+            @*<td>
+                @Html.DisplayFor(modelItem => item.OuiDestination)
+            </td>*@
+            <td>
+                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#miModal" data-mensaje="@item.TypeDetection.DescriptionLong"><i class="bi bi-question-circle"></i></button>
+                    @Html.DisplayFor(modelItem => item.TypeDetection.DescriptionShort)
+            </td>
+            <td>
+                @if (item.CantPacketsDetect < 50)
+                {
+                    <span class="badge bg-success">Pequeño</span>
+                }
+                else if (item.CantPacketsDetect < 300)
+                {
+                    <span class="badge bg-warning">Mediano</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Grande</span>
+                }
+            </td>
+            <td>
+                @if (item.TypeDetection.Severity == 0)
+                {
+                    <span class="badge bg-success">Bajo</span>
+                }
+                else if (item.TypeDetection.Severity == 1)
+                {
+                    <span class="badge bg-warning">Medio</span>
+                }
+                else if (item.TypeDetection.Severity == 2)
+                {
+                    <span class="badge bg-danger">Alto</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Ver detalle</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+<div class="modal" id="miModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información del ataque:</h5>
+                 @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button> *@
+            </div>
+            <div class="modal-body">
+                <p id="mensajeModal">Texto por defecto</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">¡Entendido!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+
+}
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        // ignore columns with class "no-sort" and no sort by default
+        $(document).ready(function () {
+            $('#miTabla').DataTable({
+                "order": [],
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+
+            });
+            
+
+
+        });
+    </script>
+
+    <script>
+        var miModal = document.getElementById('miModal');
+        miModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var mensaje = button.getAttribute('data-mensaje');
+            var modalBody = miModal.querySelector('#mensajeModal');
+            modalBody.textContent = mensaje;
+        });
+    </script>
+
+}

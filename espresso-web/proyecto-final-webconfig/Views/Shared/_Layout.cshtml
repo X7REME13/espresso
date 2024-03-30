@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Espresso IDS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    @await RenderSectionAsync("Styles", required: false)
+
+</head>
+<body style="background-color: rgb(235 233 233);">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark text-white border-bottom box-shadow mb-3 bg-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand btn btn-secondary text-white" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-cup-hot"></i></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Monitoreo" asp-action="List"><i class="bi bi-list-columns-reverse"></i>   Registro de eventos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-controller="Device" asp-action="ListDevices"><i class="bi bi-display"></i> Dispositivos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-controller="Device" asp-action="ListBlackList"><i class="bi bi-crosshair"></i>   Expulsión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-controller="Config" asp-action="Index"><i class="bi bi-wrench"></i>   Configuración</a>
+                            </li>
+                                
+                        }
+                            
+                    </ul>
+                </div>
+                <div class="navbar-nav ml-auto">
+                    @if(User.Identity.IsAuthenticated){
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white btn btn-outline-secondary rounded-pill px-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @User.Identity.Name.ToUpper()
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a asp-controller="Login" asp-action="Index" class="dropdown-item"><i class="bi bi-person-fill"></i> Cerrar sesión </a></li>
+                            </ul>
+                        </li>
+                        <div class="nav-item dropdown login-dropdown">
+                            
+                        </div>
+                    }else
+                    {
+                        <div class="nav-item dropdown login-dropdown">
+                            <a asp-controller="Login" asp-action="Index" class="nav-item nav-link text-white btn btn-outline-secondary rounded-pill px-3"><i class="bi bi-person-fill"></i> Iniciar sesión </a>
+                        </div>
+                    
+                    }
+
+                </div>
+            </div>
+
+        </nav>
+    </header>
+    <div class="container-xl" style="max-width: 1400px">
+        <main role="main" class="pb-3 card py-3 px-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    @*  <footer class="border-top footer text-muted">
+         <div class="container">
+             &copy; 2023 - proyecto_final_webconfig - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+         </div>
+     </footer> *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@@2.5.3/dist/umd/popper.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

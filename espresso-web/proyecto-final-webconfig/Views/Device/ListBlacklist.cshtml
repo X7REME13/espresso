@@ -1,0 +1,69 @@
+﻿@model IEnumerable<proyecto_final_webconfig.Models.Entities.Device>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Registro de dispositivos expulsados de la red</h1>
+<hr />
+<table id="miTabla" class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Dirección MAC
+            </th>
+            <th>
+                Nombre del dispositivo
+            </th>
+            <th>
+                Eventos detectados
+            </th>
+            <th>
+                Último evento registrado
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MacSource)
+            </td>
+            <td>
+                @(String.IsNullOrEmpty(item.Description) ? "Anónimo" : item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventsDetected)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeOfBan)
+            </td>
+            <td >
+                <a asp-controller="Monitoreo" asp-action="ListByDevice" asp-route-mac="@item.MacSource" class="btn btn-warning"> <i class="bi bi-exclamation-triangle"></i> Eventos asociados</a>
+                    <a asp-action="UnbanDevice" asp-route-id="@item.Id" class="btn btn-success  fw-bold"> <i class="bi bi-check-circle  fw-bold"></i> Ignorar actividad de este dispositivo</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+}
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#miTabla').DataTable();
+        });
+    </script>
+
+}

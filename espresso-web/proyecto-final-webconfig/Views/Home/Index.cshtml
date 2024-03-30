@@ -1,0 +1,87 @@
+﻿@model proyecto_final_webconfig.Models.Entities.Stats
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="container text-center">
+    <h1 class="display-4">Bienvenido al sistema Espresso</h1>
+    <hr />
+    <div class="row">
+        <div class="col-3">
+            <div class="card my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Usuarios conectados:</h5>
+                    <h3 class="card-text">@Model.UsersConnected</h3>
+                </div>
+            </div>
+            <div class="card  my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Incidencias recientes:</h5>
+                    <h3 class="card-text">@Model.RecentIncidents</h3>
+                </div>
+            </div>
+            <div class="card  my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Tamaño de ataques</h5>
+                    <div class="row my-1">
+                        <span class="badge bg-success p-2 px-3 mx-3 col-4">Pequeño</span>
+                        <h4 class="card-text d-inline-block col-6">@Model.CantSmallIncidents</h4>
+                    </div>
+                    <div class="row my-1">
+                        <span class="badge bg-warning p-2 px-3 mx-3 col-4">Mediano</span>
+                        <h4 class="card-text d-inline-block col-6">@Model.CantMediumIncidents</h4>
+                    </div>
+                    <div class="row my-1">
+                        <span class="badge bg-danger p-2 px-3 mx-3 col-4">Grande</span>
+                        <h4 class="card-text d-inline-block col-6">@Model.CantBigIncidents</h4>
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <div class="col-6">
+            <img src="~/img/Logo1.png" class="img-fluid" alt="Responsive image" width="500" height="500">
+
+        </div>
+        <div class="col-3">
+            <div class="card my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Usuarios en lista negra</h5>
+                    <h3 class="card-text">@Model.BanDevices</h3>
+                </div>
+            </div>
+            <div class="card my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Tiempo en funcionamiento:</h5>
+                    <h3 class="card-text">@Model.Uptime</h3>
+                </div>
+            </div>
+            <div class="card my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Severidad</h5>
+                    <div class="row my-1">
+                        <span class="badge bg-success p-2 px-3 mx-3 col-4">Bajo</span>
+                        <h4 class="card-text d-inline-block col-6">@Model.CantLowSeverity</h4>
+                    </div>
+                    <div class="row my-1">
+                        <span class="badge bg-warning p-2 px-3 mx-3 col-4">Medio</span>
+                        <h4 class="card-text d-inline-block col-6">@Model.CantMediumSeverity</h4>
+                    </div>
+                    <div class="row my-1">
+                        <span class="badge bg-danger p-2 px-3 mx-3 col-4">Alto</span>
+                        <h4 class="card-text d-inline-block col-6">@Model.CantHighSeverity</h4>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+
+    @* importar una foto de la maquina de cafe *@
+
+
+    
+</div>

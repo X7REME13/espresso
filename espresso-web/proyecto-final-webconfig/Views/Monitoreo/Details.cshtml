@@ -1,0 +1,109 @@
+﻿@model proyecto_final_webconfig.Models.Entities.Event
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<div class="row">
+    <div class="col-2">
+        <button type="button" onclick="history.back()" class="btn btn-outline-primary m-2"><i class="bi bi-arrow-left"></i> Volver a la lista</button>
+    </div>
+    
+    <h1 class="col">Detalle del evento</h1>
+
+</div>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-5 card p-4 m-3">
+
+        <dl class="row">
+            <dt class="col-12">
+                IP del atacante
+            </dt>
+            <dd class="col-sm-12 form-control mb-3">
+                @Html.DisplayFor(model => model.IpSource)
+            </dd>
+            <dt class="col-12">
+                Dirección MAC del atacante
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                @Html.DisplayFor(model => model.MacSource)
+            </dd>
+            <dt class="col-12">
+                Nombre de dispositivo de origen
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                @(String.IsNullOrEmpty(Model.OuiSource) ? "Anónimo" : Model.OuiSource)
+            </dd>
+            <dt class="col-12">
+                Tipo de ataque
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                @Html.DisplayFor(model => model.TypeDetection.DescriptionShort)
+            </dd>
+            <dt class="col-12">
+                Severidad del ataque
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                @if (Model.TypeDetection.Severity == 0)
+                {
+                    <span class="badge bg-success">Bajo</span>
+                }
+                else if (Model.TypeDetection.Severity == 1)
+                {
+                    <span class="badge bg-warning">Medio</span>
+                }
+                else if (Model.TypeDetection.Severity == 2)
+                {
+                    <span class="badge bg-danger">Alto</span>
+                }
+            </dd>
+            <dt class="col-12">
+                Cantidad de paquetes detectados
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                @if (Model.CantPacketsDetect < 50)
+                {
+                    <span class="badge bg-success">Pequeño</span>
+                }
+                else if (Model.CantPacketsDetect < 300)
+                {
+                    <span class="badge bg-warning">Mediano</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Grande</span>
+                }
+                | @Model.CantPacketsDetect paquetes detectados
+            </dd>
+            <dt class="col-12">
+                Hora de detección
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                @Html.DisplayFor(model => model.Timestamp)
+            </dd>
+
+            <dt class="col-12">
+                Duración del ataque
+            </dt>
+            <dd class="col-sm-12 form-control  mb-3">
+                20 segundos
+            </dd>
+
+        </dl>
+    </div>
+    <div class="col-6 card m-3">
+
+        <div class="d-flex justify-content-center">
+            <img src="~/img/consulta.png" class="img-fluid " alt="Responsive image" width="350" height="350">
+        </div>
+        
+
+        <div class="p-5">
+            <h3 class="card-title">Información sobre @Model.TypeDetection.DescriptionShort</h3>
+            <p>@Model.TypeDetection.DescriptionLong</p>
+        </div>
+
+    </div>
+</div>
+
