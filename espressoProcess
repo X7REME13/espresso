@@ -45,7 +45,7 @@ cleanup() {
         appWeb_pid=$(<appWeb.pid)
         echo "Terminando AppWeb (PID: $appWeb_pid)..."
         sudo kill $appWeb_pid
-		sudo killall dotnet
+	sudo killall dotnet
         rm appWeb.pid
     fi
 	
@@ -68,12 +68,12 @@ echo " >>   Bienvenido al sistema Espresso!     <<"
 echo " >> Estamos iniciando todo para usted...  <<"
 echo " >>=======================================<<"
 
-cd /home/kali/Espresso
+cd /home/$SUDO_USER/espresso
 source ./bin/activate
 echo "Entorno establecido."
 
 
-su kali -c "./procesoReducido & echo $! > procesoReducido.pid"
+su $SUDO_USER -c "bash ./procesoReducido & echo $! > procesoReducido.pid"
 echo "Sistema de detección de anomalias iniciado."
 
 sudo python monitorSystem.py & echo $! > monitorSystem.pid
@@ -82,16 +82,16 @@ echo "Sistema de monitoreo iniciado."
 python analizeLogs.py & echo $! > analizeLogs.pid
 echo "Sistema de analisis de comportamiento iniciado."
 
-sudo ./airmon
+sudo bash ./airmon
 echo "wlan0 configurada en modo monitor."
 
 sudo python expulsionSystem.py & echo $! > expulsionSystem.pid
 echo "Sistema de expulsion iniciado."
 
-su kali -c  "./snifferProceso & echo $! > snifferProceso.pid"
+su $SUDO_USER -c  "bash ./snifferProceso & echo $! > snifferProceso.pid"
 echo "Sistema de detección de anomalias (Monitor Mode) iniciado."
 
-su kali -c "/home/kali/.dotnet/dotnet run --project /home/kali/proyecto-final-webconfig/proyecto-final-webconfig & echo $! > appWeb.pid"
+su $SUDO_USER -c "/home/kali/.dotnet/dotnet run --project /home/kali/proyecto-final-webconfig/proyecto-final-webconfig & echo $! > appWeb.pid"
 echo "Sistema de aplicación web iniciado."
 
 

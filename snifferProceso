@@ -1,11 +1,11 @@
 #!/bin/bash
 
-cd /home/kali/Espresso
+cd /home/$SUDO_USER/espresso
 source ./bin/activate
 
 command="tshark -i wlan0mon -a duration:10 -w"
-filename="/home/kali/Espresso/captures/captureSniffer.pcap"
-basefilepath="/home/kali/Espresso/captures/filteredReducidoMonitor"
+filename="./captures/captureSniffer.pcap"
+basefilepath="./captures/filteredReducidoMonitor"
 
 while true
 do

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-cd /home/kali/Espresso
+cd /home/$SUDO_USER/espresso
 source ./bin/activate
 
 tshark="tshark -i eth0 -a duration:20 -w"
 
-filename="/home/kali/Espresso/captures/capture.pcap"
-basefilepath="/home/kali/Espresso/captures/filteredReducido"
+filename="./captures/capture.pcap"
+basefilepath="./captures/filteredReducido"
 filter="not ether host D8:3A:DD:0B:20:6E and not ether host D8:3A:DD:0B:20:6C"
 
 while true
